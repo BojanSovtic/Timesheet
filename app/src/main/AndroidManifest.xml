@@ -10,11 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AddEditActivity"
-            android:label="@string/title_activity_add_edit"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">

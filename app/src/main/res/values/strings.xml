@@ -36,4 +36,5 @@
     <string name="about_url"><u>http://www.linkedin.com/in/bojan-sovti%C4%87-2ab294160/</u></string>
     <string name="about_weblink_21">LinkedIn: https://www.linkedin.com/in/bojan-sovti%C4%87-2ab294160/</string>
     <string name="about_email">Email: bojansovtic92@gmail.com</string>
+    <string name="current_timing_text">Timing %1$s</string>
 </resources>

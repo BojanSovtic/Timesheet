@@ -12,17 +12,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 public class AddEditActivityFragment extends Fragment {
 
-    public enum FragmentEditMode { EDIT, ADD }
+    private enum FragmentEditMode { EDIT, ADD }
     private FragmentEditMode mode;
 
     private EditText nameTextView;
     private EditText descriptionTextView;
     private EditText sortOrderTextView;
-    private Button saveButton;
     private OnSaveClicked saveListener = null;
 
     interface OnSaveClicked {
@@ -46,19 +48,32 @@ public class AddEditActivityFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         saveListener = null;
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_edit, container, false);
 
-        nameTextView = (EditText) view.findViewById(R.id.addedit_name);
-        descriptionTextView = (EditText) view.findViewById(R.id.addedit_description);
-        sortOrderTextView = (EditText) view.findViewById(R.id.addedit_sortorder);
-        saveButton = (Button) view.findViewById(R.id.addedit_save);
+        nameTextView = view.findViewById(R.id.addedit_name);
+        descriptionTextView = view.findViewById(R.id.addedit_description);
+        sortOrderTextView = view.findViewById(R.id.addedit_sortorder);
+        Button saveButton = view.findViewById(R.id.addedit_save);
 
         Bundle arguments = getArguments();
 
@@ -94,6 +109,10 @@ public class AddEditActivityFragment extends Fragment {
 
                 switch (mode) {
                     case EDIT:
+                        if (task == null) {
+                            // remove lint warnings, will never execute
+                            break;
+                        }
                         if (!nameTextView.getText().toString().equals(task.getName())) {
                             values.put(TasksContract.Columns.TASKS_NAME, nameTextView.getText().toString());
                         }

@@ -1,6 +1,7 @@
 package com.bojansovtic.timesheet;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewAdapter.TaskViewHolder> {
+    private static final String TAG = "CursorRecyclerViewAdapt";
     private Cursor cursor;
     private OnTaskClickListener listener;
 
     interface OnTaskClickListener {
-        void onEditClick(Task task);
-        void onDeleteClick(Task task);
+        void onEditClick(@NonNull Task task);
+        void onDeleteClick(@NonNull Task task);
+        void onTaskLongClick(@NonNull Task task);
     }
 
     public CursorRecyclerViewAdapter(Cursor cursor, OnTaskClickListener listener) {
@@ -71,8 +74,21 @@ class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewA
                 }
             };
 
+            View.OnLongClickListener buttonLongListener = new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.d(TAG, "onLongClick: starts");
+                    if (listener != null) {
+                        listener.onTaskLongClick(task);
+                        return true;
+                    }
+                    return false;
+                }
+            };
+
             holder.editButton.setOnClickListener(buttonListener);
             holder.deleteButton.setOnClickListener(buttonListener);
+            holder.itemView.setOnLongClickListener(buttonLongListener);
         }
     }
 
@@ -101,18 +117,20 @@ class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewA
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView name = null;
-        TextView description = null;
-        ImageButton editButton = null;
-        ImageButton deleteButton = null;
+        TextView name;
+        TextView description;
+        ImageButton editButton;
+        ImageButton deleteButton;
+        View itemView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.name = (TextView) itemView.findViewById(R.id.tli_name);
-            this.description = (TextView) itemView.findViewById(R.id.tli_description);
-            this.editButton = (ImageButton) itemView.findViewById(R.id.tli_edit);
-            this.deleteButton = (ImageButton) itemView.findViewById(R.id.tli_delete);
+            this.name = itemView.findViewById(R.id.tli_name);
+            this.description = itemView.findViewById(R.id.tli_description);
+            this.editButton = itemView.findViewById(R.id.tli_edit);
+            this.deleteButton = itemView.findViewById(R.id.tli_delete);
+            this.itemView = itemView;
         }
     }
 }
