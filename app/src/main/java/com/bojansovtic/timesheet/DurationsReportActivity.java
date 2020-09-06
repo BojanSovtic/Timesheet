@@ -55,6 +55,7 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_durations_report);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -101,6 +102,7 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         recyclerView.setAdapter(adapter);
 
         LoaderManager.getInstance(this).initLoader(LOADER_ID, args, this);
+        Log.d(TAG, "onCreate: ends");
     }
 
     @Override
@@ -222,6 +224,7 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         applyFilter();
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, args, this);
     }
+
     @Override
     public void onPositiveDialogResult(int dialogId, Bundle args) {
         long deleteDate = args.getLong(DELETION_DATE);
@@ -276,6 +279,7 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         }
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
@@ -310,12 +314,12 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         adapter.swapCursor(null);
     }
 }

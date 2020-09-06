@@ -33,7 +33,33 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private Timing currentTiming = null;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: called");
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        Log.d(TAG, "onCreate: ends");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: called");
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.task_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (adapter == null) {
+            adapter = new CursorRecyclerViewAdapter(null, this);
+        }
+
+        recyclerView.setAdapter(adapter);
+
+        Log.d(TAG, "onCreateView: ends");
+        return view;
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated: called");
         super.onActivityCreated(savedInstanceState);
 
         Activity activity = getActivity();
@@ -44,6 +70,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
         setTimingText(currentTiming);
+        Log.d(TAG, "onActivityCreated: ends");
     }
 
     @Override
@@ -104,27 +131,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.task_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        if (adapter == null) {
-            adapter = new CursorRecyclerViewAdapter(null, this);
-        }
-
-        recyclerView.setAdapter(adapter);
-
-        return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
@@ -149,7 +155,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
-        int count = adapter.getItemCount();
     }
 
     @Override

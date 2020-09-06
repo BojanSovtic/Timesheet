@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Boolean editing = fragmentManager.findFragmentById(R.id.task_details_container) != null;
+        boolean editing = fragmentManager.findFragmentById(R.id.task_details_container) != null;
 
         View addEditLayout = findViewById(R.id.task_details_container);
         View mainFragment = findViewById(R.id.fragment);
@@ -62,26 +63,17 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
             addEditLayout.setVisibility(View.GONE);
         }
+        Log.d(TAG, "onCreate: ends");
     }
 
     @Override
-    public void onSaveClicked() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .remove(fragment)
-                    .commit();
+    protected void onStop() {
+        Log.d(TAG, "onStop: called");
+        super.onStop();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
         }
-
-        View addEditLayout = findViewById(R.id.task_details_container);
-        View mainFragment = findViewById(R.id.fragment);
-
-        if (!twoPane) {
-            addEditLayout.setVisibility(View.GONE);
-
-            mainFragment.setVisibility(View.VISIBLE);
-        }
+        Log.d(TAG, "onStop: ends");
     }
 
     @Override
@@ -116,14 +108,8 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
                 TestData.generateTestData(getContentResolver());
                 break;
             case android.R.id.home:
-                AddEditActivityFragment fragment = (AddEditActivityFragment)
-                        getSupportFragmentManager().findFragmentById(R.id.task_details_container);
-                if (fragment.canClose()) {
-                    return super.onOptionsItemSelected(item);
-                } else {
-                    showConfirmationDialog(DIALOG_ID_CANCEL_EDIT_UP);
-                    return true;
-                }
+                showConfirmationDialog(DIALOG_ID_CANCEL_EDIT_UP);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,10 +135,10 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
 
-        TextView tv = (TextView) messageView.findViewById(R.id.about_version);
+        TextView tv = messageView.findViewById(R.id.about_version);
         tv.setText("v" + BuildConfig.VERSION_NAME);
 
-        TextView about_url = (TextView) messageView.findViewById(R.id.about_url);
+        TextView about_url = messageView.findViewById(R.id.about_url);
         if (about_url != null) {
             about_url.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -174,6 +160,27 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
     }
 
     @Override
+    public void onSaveClicked() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
+        if (fragment != null) {
+            fragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+
+        View addEditLayout = findViewById(R.id.task_details_container);
+        View mainFragment = findViewById(R.id.fragment);
+
+        if (!twoPane) {
+            addEditLayout.setVisibility(View.GONE);
+
+            mainFragment.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    @Override
     public void onEditClick(@NonNull Task task) {
         taskEditRequest(task);
     }
@@ -190,6 +197,11 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
         dialog.setArguments(args);
         dialog.show(getSupportFragmentManager(), null);
+    }
+
+
+    @Override
+    public void onTaskLongClick(@NonNull Task task) {
     }
 
     private void taskEditRequest(Task task) {
@@ -214,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
     public void onPositiveDialogResult(int dialogId, Bundle args) {
         switch (dialogId) {
             case DIALOG_ID_DELETE:
-                Long taskId = args.getLong("TaskId");
+                long taskId = args.getLong("TaskId");
                 getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
                 break;
             case DIAlOG_ID_CANCEL_EDIT:
@@ -265,21 +277,12 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddEditActivityFragment fragment = (AddEditActivityFragment) fragmentManager
                 .findFragmentById(R.id.task_details_container);
-        if (fragment == null || fragment.canClose()) {
+        if (fragment == null) {
             super.onBackPressed();
         } else {
             showConfirmationDialog(DIAlOG_ID_CANCEL_EDIT);
         }
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-    }
-
     private void showConfirmationDialog(int dialogId) {
         AppDialog dialog = new AppDialog();
         Bundle args = new Bundle();
@@ -290,9 +293,5 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
         dialog.setArguments(args);
         dialog.show(getSupportFragmentManager(), null);
-    }
-
-    @Override
-    public void onTaskLongClick(@NonNull Task task) {
     }
 }

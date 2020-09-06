@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,9 @@ public class AddEditActivityFragment extends Fragment {
         void onSaveClicked();
     }
 
-    public boolean canClose() {
-        return false;
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
+        Log.d(TAG, "onAttach: called");
         super.onAttach(context);
 
         Activity activity = getActivity();
@@ -46,29 +44,23 @@ public class AddEditActivityFragment extends Fragment {
                     + " must implement AddEditActivityFragment.OnSaveClicked interface");
         }
         saveListener = (OnSaveClicked) activity;
+        Log.d(TAG, "onAttach: ends");
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated: caleld");
         super.onActivityCreated(savedInstanceState);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        saveListener = null;
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-        }
+        Log.d(TAG, "onActivityCreated: ends");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: called");
         View view = inflater.inflate(R.layout.fragment_add_edit, container, false);
 
         nameTextView = view.findViewById(R.id.addedit_name);
@@ -141,6 +133,19 @@ public class AddEditActivityFragment extends Fragment {
             }
         });
 
+        Log.d(TAG, "onCreateView: ends");
         return view;
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: called");
+        super.onDetach();
+        saveListener = null;
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+        Log.d(TAG, "onDetach: ends");
     }
 }

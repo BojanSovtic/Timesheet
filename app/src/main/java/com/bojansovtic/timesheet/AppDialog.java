@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ public class AppDialog extends DialogFragment  {
 
     @Override
     public void onAttach(@NonNull Context context) {
+        Log.d(TAG, "onAttach: called");
         super.onAttach(context);
 
         if (!(context instanceof DialogEvents)) {
@@ -36,18 +38,13 @@ public class AppDialog extends DialogFragment  {
         }
 
         dialogEvents = (DialogEvents) context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        dialogEvents = null;
+        Log.d(TAG, "onAttach: ends");
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateDialog: called");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         final Bundle arguments = getArguments();
@@ -94,7 +91,17 @@ public class AppDialog extends DialogFragment  {
                     }
                 });
 
+        Log.d(TAG, "onCreateDialog: ends");
         return builder.create();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: called");
+        super.onDetach();
+
+        dialogEvents = null;
+        Log.d(TAG, "onDetach: ends");
     }
 
     @Override

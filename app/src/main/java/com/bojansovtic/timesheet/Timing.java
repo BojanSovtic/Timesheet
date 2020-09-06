@@ -1,12 +1,9 @@
 package com.bojansovtic.timesheet;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.Date;
 
 class Timing implements Serializable {
-    private static final String TAG = "Timing";
     private static final long serialVersionUID = 20200903L;
 
     private long _id;
@@ -25,10 +22,6 @@ class Timing implements Serializable {
         return _id;
     }
 
-    void set_id(long _id) {
-        this._id = _id;
-    }
-
     long getStartTime() {
         return startTime;
     }
@@ -44,7 +37,6 @@ class Timing implements Serializable {
     void setDuration() {
         Date currentTime = new Date();
         duration = (currentTime.getTime() / 1000) - startTime;
-        Log.d(TAG, task.get_id() + " - Start time: " + startTime + " | Duration: " + duration);
     }
 
     Task getTask() {

@@ -21,10 +21,6 @@ class Task implements Serializable {
         return _id;
     }
 
-    void set_id(long _id) {
-        this._id = _id;
-    }
-
     String getName() {
         return name;
     }

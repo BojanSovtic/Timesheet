@@ -23,9 +23,21 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     int dialogId = 0;
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        Log.d(TAG, "onAttach: called");
+        super.onAttach(context);
+
+        if (!(context instanceof DatePickerDialog.OnDateSetListener)) {
+            throw new ClassCastException(context.toString() + " must implement atePickerDialog.OnDateSetListener interface");
+        }
+        Log.d(TAG, "onAttach: ends");
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateDialog: called");
         final GregorianCalendar calendar = new GregorianCalendar();
         String title = null;
 
@@ -48,16 +60,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         if (title != null) {
             datePickerDialog.setTitle(title);
         }
+        Log.d(TAG, "onCreateDialog: ends");
         return datePickerDialog;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        if (!(context instanceof DatePickerDialog.OnDateSetListener)) {
-            throw new ClassCastException(context.toString() + " must implement atePickerDialog.OnDateSetListener interface");
-        }
     }
 
     @Override
