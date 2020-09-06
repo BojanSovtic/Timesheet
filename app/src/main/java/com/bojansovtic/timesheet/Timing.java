@@ -5,12 +5,6 @@ import android.util.Log;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Simple timing object.
- * Sets its start time when created, and calculates how long since creation,
- * when setDuration is called.
- */
-
 class Timing implements Serializable {
     private static final String TAG = "Timing";
     private static final long serialVersionUID = 20200903L;
@@ -22,9 +16,8 @@ class Timing implements Serializable {
 
     public Timing(Task task) {
         this.task = task;
-        // Initialise the start time to now and the duration to zero for a new object
         Date currentTime = new Date();
-        startTime = currentTime.getTime() / 1000;  // We are only tracking while seconds, not milliseconds
+        startTime = currentTime.getTime() / 1000;
         duration = 0;
     }
 
@@ -49,9 +42,8 @@ class Timing implements Serializable {
     }
 
     void setDuration() {
-        // Calculate the duration from startTime to dateTime
         Date currentTime = new Date();
-        duration = (currentTime.getTime() / 1000) - startTime;  // Working in seconds, not milliseconds
+        duration = (currentTime.getTime() / 1000) - startTime;
         Log.d(TAG, task.get_id() + " - Start time: " + startTime + " | Duration: " + duration);
     }
 

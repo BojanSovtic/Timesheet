@@ -7,11 +7,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class AppProvider extends ContentProvider {
+    private static final String TAG = "AppProvider";
+
     private AppDatabase openHelper;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -25,13 +28,8 @@ public class AppProvider extends ContentProvider {
     private static final int TIMINGS = 200;
     private static final int TIMINGS_ID = 201;
 
-    // TODO
-    private static final int TASKS_TIMINGS = 300;
-    private static final int TASKS_TIMINGS_ID = 301;
-
-
-    private static final int TASK_DURATIONS = 400;
-    private static final int TASK_DURATIONS_ID = 401;
+    private static final int TASK_DURATIONS = 300;
+    private static final int TASK_DURATIONS_ID = 301;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -58,6 +56,7 @@ public class AppProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
                         @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        Log.d(TAG, "query: URI" + uri);
         final int match = sUriMatcher.match(uri);
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();

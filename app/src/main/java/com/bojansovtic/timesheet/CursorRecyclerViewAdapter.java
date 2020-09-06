@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewAdapter.TaskViewHolder> {
     private static final String TAG = "CursorRecyclerViewAdapt";
+
     private Cursor cursor;
     private OnTaskClickListener listener;
 
@@ -77,7 +78,6 @@ class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewA
             View.OnLongClickListener buttonLongListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.d(TAG, "onLongClick: starts");
                     if (listener != null) {
                         listener.onTaskLongClick(task);
                         return true;
@@ -106,12 +106,14 @@ class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewA
             return null;
         }
 
+        int count = getItemCount();
+
         final Cursor oldCursor = cursor;
         cursor = newCursor;
         if (newCursor != null) {
             notifyDataSetChanged();
         } else {
-            notifyItemRangeRemoved(0, getItemCount());
+            notifyItemRangeRemoved(0, count);
         }
         return oldCursor;
     }

@@ -37,4 +37,16 @@
     <string name="about_weblink_21">LinkedIn: https://www.linkedin.com/in/bojan-sovti%C4%87-2ab294160/</string>
     <string name="about_email">Email: bojansovtic92@gmail.com</string>
     <string name="current_timing_text">Timing %1$s</string>
+    <string name="td_text_name">Task name</string>
+    <string name="td_text_date">Date</string>
+    <string name="td_text_duration">Duration</string>
+    <string name="td_text_description">Description</string>
+    <string name="title_activity_durations_report">Durations Report</string>
+    <string name="rm_title_filter_day">Show day</string>
+    <string name="rm_title_filter_week">Show week</string>
+    <string name="rm_title_filter_date">Set report date</string>
+    <string name="rm_title_delete">Delete old timings</string>
+    <string name="date_title_filter">Select date for report</string>
+    <string name="date_title_delete">Select date to delete up to</string>
+    <string name="delete_timings_message">\"Are you sure you want to delete all timings before %1$s?"</string>
 </resources>

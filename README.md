@@ -1,3 +1,3 @@
 # Timesheet
-TODO  - Add report functionality
+TODO  - Minor refactoring (add aditional logging, clean up...)
 

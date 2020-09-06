@@ -36,7 +36,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Activities containing this fragment must implement its callbacks
         Activity activity = getActivity();
         if (!(activity instanceof CursorRecyclerViewAdapter.OnTaskClickListener)) {
             throw new ClassCastException(activity.getClass().getSimpleName()
@@ -49,7 +48,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onEditClick(@NonNull Task task) {
-        Log.d(TAG, "onEditClick: called");
         CursorRecyclerViewAdapter.OnTaskClickListener listener =
                 (CursorRecyclerViewAdapter.OnTaskClickListener) getActivity();
         if (listener != null) {
@@ -59,7 +57,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onDeleteClick(@NonNull Task task) {
-        Log.d(TAG, "onDeleteClick: called");
         CursorRecyclerViewAdapter.OnTaskClickListener listener =
                 (CursorRecyclerViewAdapter.OnTaskClickListener) getActivity();
         if (listener != null) {
@@ -69,30 +66,23 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onTaskLongClick(@NonNull Task task) {
-        Log.d(TAG, "onTaskLongClick: called");
         if (currentTiming != null) {
             if (task.get_id() == currentTiming.getTask().get_id()) {
-                // The current task was tapped a second time, so stop timing
                 saveTiming(currentTiming);
                 currentTiming = null;
                 setTimingText(null);
             } else {
-                // A new task is being timed, so stop the old one first
                 saveTiming(currentTiming);
                 currentTiming = new Timing(task);
                 setTimingText(currentTiming);
             }
         } else {
-            // No task being timed, so start timing the new task
             currentTiming = new Timing(task);
             setTimingText(currentTiming);
         }
     }
 
     private void saveTiming(@NonNull Timing currentTiming) {
-        Log.d(TAG, "saveTiming: Entering saveTiming");
-
-        // If we have an open timing, set the duration and save
         currentTiming.setDuration();
 
         ContentResolver contentResolver = getActivity().getContentResolver();
@@ -101,10 +91,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         values.put(TimingsContract.Columns.TIMINGS_START_TIME, currentTiming.getStartTime());
         values.put(TimingsContract.Columns.TIMINGS_DURATION, currentTiming.getDuration());
 
-        // update table in database
         contentResolver.insert(TimingsContract.CONTENT_URI, values);
-
-        Log.d(TAG, "saveTiming: Exiting saveTiming");
     }
 
     private void setTimingText(Timing timing) {
@@ -134,7 +121,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: called");
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }

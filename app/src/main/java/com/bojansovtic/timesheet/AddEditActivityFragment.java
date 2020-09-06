@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 public class AddEditActivityFragment extends Fragment {
+    private static final String TAG = "AddEditActivityFragment";
 
     private enum FragmentEditMode { EDIT, ADD }
     private FragmentEditMode mode;
@@ -32,7 +33,7 @@ public class AddEditActivityFragment extends Fragment {
     }
 
     public boolean canClose() {
-        return false;  // TODO
+        return false;
     }
 
     @Override
@@ -109,10 +110,6 @@ public class AddEditActivityFragment extends Fragment {
 
                 switch (mode) {
                     case EDIT:
-                        if (task == null) {
-                            // remove lint warnings, will never execute
-                            break;
-                        }
                         if (!nameTextView.getText().toString().equals(task.getName())) {
                             values.put(TasksContract.Columns.TASKS_NAME, nameTextView.getText().toString());
                         }

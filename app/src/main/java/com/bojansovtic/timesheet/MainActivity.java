@@ -44,31 +44,22 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         setSupportActionBar(toolbar);
 
         twoPane = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-        Log.d(TAG, "onCreate: twoPane is " + twoPane);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        // If the AddEditActivity fragment exists, we're editing
-        Boolean editing = fragmentManager.findFragmentById(R.id.task_details_container) != null;
-        Log.d(TAG, "onCreate: editing is " + editing);
 
-        // We need references to the containers, so we can show or hide them as necessary
-        // No need to cast them, as we're only calling a method that's available for all views
+        Boolean editing = fragmentManager.findFragmentById(R.id.task_details_container) != null;
+
         View addEditLayout = findViewById(R.id.task_details_container);
         View mainFragment = findViewById(R.id.fragment);
 
         if (twoPane) {
-            Log.d(TAG, "onCreate: twoPane mode");
             mainFragment.setVisibility(View.VISIBLE);
             addEditLayout.setVisibility(View.VISIBLE);
         } else if (editing) {
-            Log.d(TAG, "onCreate: single pane, editing");
-            // Hide the left hand fragment, to make room for editing
             mainFragment.setVisibility(View.GONE);
         } else {
-            Log.d(TAG, "onCreate: single pane, not editing");
-            // Show left hand fragment
             mainFragment.setVisibility(View.VISIBLE);
-            // Hide the editing frame
+
             addEditLayout.setVisibility(View.GONE);
         }
     }
@@ -87,10 +78,8 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         View mainFragment = findViewById(R.id.fragment);
 
         if (!twoPane) {
-            // We've just removed the editing fragment, so hide the frame
             addEditLayout.setVisibility(View.GONE);
 
-            // And make sure the MainActivityFragment is visible
             mainFragment.setVisibility(View.VISIBLE);
         }
     }
@@ -116,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
                 taskEditRequest(null);
                 break;
             case R.id.menumain_showDurations:
+                startActivity(new Intent(this, DurationsReportActivity.class));
                 break;
             case R.id.menumain_settings:
                 break;
@@ -126,14 +116,13 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
                 TestData.generateTestData(getContentResolver());
                 break;
             case android.R.id.home:
-                Log.d(TAG, "onOptionsItemSelected: home button pressed");
                 AddEditActivityFragment fragment = (AddEditActivityFragment)
                         getSupportFragmentManager().findFragmentById(R.id.task_details_container);
                 if (fragment.canClose()) {
                     return super.onOptionsItemSelected(item);
                 } else {
                     showConfirmationDialog(DIALOG_ID_CANCEL_EDIT_UP);
-                    return true;  // indicate we are handling this
+                    return true;
                 }
         }
 
@@ -210,19 +199,15 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         arguments.putSerializable(Task.class.getSimpleName(), task);
         fragment.setArguments(arguments);
 
-        Log.d(TAG, "taskEditRequest: twoPaneMode");
         getSupportFragmentManager()
                 .beginTransaction().replace(R.id.task_details_container, fragment)
                 .commit();
         if (!twoPane) {
-            Log.d(TAG, "taskEditRequest: in single-pane mode (phone)");
-            // Hide the left hand fragment and show the right hand frame
             View mainFragment = findViewById(R.id.fragment);
             View addEditLayout = findViewById(R.id.task_details_container);
             mainFragment.setVisibility(View.GONE);
             addEditLayout.setVisibility(View.VISIBLE);
         }
-        Log.d(TAG, "taskEditRequest: Exiting");
     }
 
     @Override
@@ -245,33 +230,26 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
                 break;
             case DIAlOG_ID_CANCEL_EDIT:
             case DIALOG_ID_CANCEL_EDIT_UP:
-                // If we're editing, remove the fragment. Otherwise, close the app
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
                 if (fragment != null) {
-                    // We were editing
                     getSupportFragmentManager().beginTransaction()
                             .remove(fragment)
                             .commit();
 
                     if (twoPane) {
-                        // In Landscape, quit only if the back button was used
                         if (dialogId == DIAlOG_ID_CANCEL_EDIT) {
                             finish();
                         }
                     } else {
-                        // Hide the edit container in single pane mode
-                        // and make sure the left-hand container is visible
                         View addEditLayout = findViewById(R.id.task_details_container);
                         View mainFragment = findViewById(R.id.fragment);
-                        // We've just removed the editing fragment, so hide the frame
+
                         addEditLayout.setVisibility(View.GONE);
 
-                        // and make sure the MainActivityFragment is visible
                         mainFragment.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    // Not editing, so quit regardless of orientation
                     finish();
                 }
                 break;
@@ -290,7 +268,6 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         if (fragment == null || fragment.canClose()) {
             super.onBackPressed();
         } else {
-            // show dialogue to get confirmation to quit editing
             showConfirmationDialog(DIAlOG_ID_CANCEL_EDIT);
         }
     }
@@ -317,6 +294,5 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
     @Override
     public void onTaskLongClick(@NonNull Task task) {
-        // Required to satisfy the interface
     }
 }

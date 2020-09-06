@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class AppDialog extends DialogFragment  {
+    private static final String TAG = "AppDialog";
 
     public static final String DIALOG_ID = "id";
     public static final String DIALOG_MESSAGE = "message";
